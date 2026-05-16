@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>digitalFler — Premium Digital Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#050508;--black2:#0a0a0f;--black3:#0f0f16;
+  --green:#00e87a;--green2:#00c463;--green3:#00ff88;
+  --green-dim:rgba(0,232,122,.08);--green-border:rgba(0,232,122,.22);
+  --white:#f0f0f0;--white2:#c8c8d4;--white3:#7a7a90;
+  --glass:rgba(255,255,255,.03);--glass2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.07);
+  --gold:#ffb400;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);color:var(--white);
+  font-family:'DM Sans',sans-serif;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  /* static gradient bg — zero GPU cost */
+  background-image:
+    radial-gradient(ellipse 60% 40% at 0% 0%,rgba(0,232,122,.05) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%,rgba(0,196,99,.04) 0%,transparent 60%);
+  background-attachment:fixed;
+}
+/* SCROLL PROGRESS */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--green2),var(--green3));
+  z-index:200;transition:width .1s linear;
+}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--green2),var(--green3));border-radius:2px}
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:18px 40px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,5,8,.85);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:padding .4s ease,background .4s ease;
+}
+nav.scrolled{padding:11px 40px;background:rgba(5,5,8,.95);border-bottom-color:rgba(255,255,255,.05)}
+.logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;
+  letter-spacing:-.02em;color:var(--white);position:relative;cursor:default;
+}
+.logo span{color:var(--green)}
+.logo::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--green),transparent);opacity:.7}
+.nav-right{display:flex;align-items:center;gap:14px}
+/* STATUS PILL */
+.status-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(0,232,122,.06);border:1px solid var(--green-border);
+  border-radius:100px;padding:6px 14px;
+  font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--green);
+}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 8px var(--green)}50%{opacity:.3;box-shadow:none}}
+/* LANG SWITCHER */
+.lang-switcher{display:flex;gap:3px;background:var(--glass);border:1px solid var(--border);border-radius:100px;padding:3px}
+.lang-btn{
+  padding:5px 12px;border-radius:100px;font-size:.7rem;font-weight:500;letter-spacing:.05em;
+  cursor:pointer;transition:all .3s cubic-bezier(.23,1,.32,1);border:none;
+  background:transparent;color:var(--white3);font-family:'DM Sans',sans-serif;
+}
+.lang-btn.active{background:var(--green);color:var(--black);font-weight:700}
+.lang-btn:hover:not(.active){color:var(--white);background:var(--glass2)}
+main{position:relative;z-index:2;padding-top:110px}
+/* HERO */
+.hero-phrase{
+  text-align:center;padding:80px 24px 56px;max-width:820px;margin:0 auto;position:relative;
+}
+.hero-phrase::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent calc(50% - 1px),rgba(0,232,122,.04) 50%,transparent calc(50% + 1px)),
+  linear-gradient(0deg,transparent calc(50% - 1px),rgba(0,232,122,.03) 50%,transparent calc(50% + 1px));
+  pointer-events:none;border-radius:24px;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green-dim);border:1px solid var(--green-border);
+  border-radius:100px;padding:6px 18px;
+  font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--green);font-family:'Space Mono',monospace;margin-bottom:32px;
+  opacity:0;transform:translateY(20px);animation:fadeUp .9s .1s cubic-bezier(.23,1,.32,1) forwards;
+}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 2s ease-in-out infinite}
+.hero-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.6rem);line-height:1.1;letter-spacing:-.03em;margin-bottom:22px}
+.hero-h1 .line{display:block;overflow:hidden}
+.hero-h1 .line-inner{display:block;transform:translateY(100%);opacity:0;animation:slideUp .9s cubic-bezier(.23,1,.32,1) forwards}
+.hero-h1 .line:nth-child(1) .line-inner{animation-delay:.2s}
+.hero-h1 .line:nth-child(2) .line-inner{animation-delay:.35s}
+.hero-h1 .line:nth-child(3) .line-inner{animation-delay:.5s}
+.hero-h1 .accent{color:var(--green);position:relative;display:inline-block}
+.hero-h1 .accent::after{content:attr(data-text);position:absolute;left:0;top:0;color:transparent;-webkit-text-stroke:1px rgba(0,232,122,.3);transform:translate(2px,2px);z-index:-1}
+@keyframes slideUp{to{transform:translateY(0);opacity:1}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.hero-sub{
+  font-size:clamp(.88rem,1.2vw,1rem);color:var(--white3);font-weight:300;
+  line-height:1.75;max-width:580px;margin:0 auto;
+  opacity:0;transform:translateY(20px);animation:fadeUp .9s .65s cubic-bezier(.23,1,.32,1) forwards;
+}
+/* SCROLL INDICATOR */
+.scroll-indicator{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:48px;opacity:0;animation:fadeUp .9s .9s cubic-bezier(.23,1,.32,1) forwards}
+.scroll-indicator span{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white3)}
+.scroll-mouse{width:24px;height:38px;border:1px solid var(--border);border-radius:12px;position:relative;display:flex;justify-content:center}
+.scroll-wheel{width:3px;height:8px;background:var(--green);border-radius:2px;margin-top:6px;animation:scrollWheel 2s ease-in-out infinite}
+@keyframes scrollWheel{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(10px);opacity:0}}
+/* STATS BAR */
+.stats-bar{
+  display:flex;justify-content:center;max-width:900px;margin:0 auto;
+  padding:0 32px 72px;opacity:0;transform:translateY(30px);
+  transition:opacity .9s ease,transform .9s ease;contain:layout;
+}
+.stats-bar.visible{opacity:1;transform:translateY(0)}
+.stat-item{
+  flex:1;text-align:center;padding:32px 20px;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);
+  position:relative;overflow:hidden;transition:border-color .3s,background .3s;
+}
+.stat-item:first-child{border-radius:18px 0 0 18px}
+.stat-item:last-child{border-radius:0 18px 18px 0}
+.stat-item::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--green-dim),transparent);opacity:0;transition:opacity .4s}
+.stat-item:hover{border-color:var(--green-border);background:rgba(0,232,122,.04)}
+.stat-item:hover::before{opacity:1}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,2.5vw,2.4rem);color:var(--green);letter-spacing:-.03em;line-height:1;margin-bottom:6px}
+.stat-label{font-size:.72rem;color:var(--white3);font-weight:300;letter-spacing:.05em}
+
+/* ══════════════════════════════════════════════
+   FILTER + CURRENCY ROW
+══════════════════════════════════════════════ */
+.filter-currency-block{
+  max-width:900px;margin:0 auto;padding:0 24px 56px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s .1s ease,transform .7s .1s ease;
+}
+.filter-currency-block.visible{opacity:1;transform:translateY(0)}
+
+/* Category filter */
+.filter-wrap{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.cat-btn{
+  position:relative;padding:13px 28px;border-radius:16px;
+  font-family:'Syne',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:.02em;
+  cursor:pointer;border:1px solid var(--border);background:var(--glass);color:var(--white2);
+  transition:all .5s cubic-bezier(.23,1,.32,1);backdrop-filter:blur(10px);overflow:hidden;
+}
+.cat-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--green-dim),transparent);opacity:0;transition:opacity .4s}
+.cat-btn::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--green);border-radius:2px;transition:width .4s cubic-bezier(.23,1,.32,1);box-shadow:0 0 10px var(--green)}
+.cat-btn:hover{border-color:var(--green-border);color:var(--white);transform:translateY(-3px)}
+.cat-btn:hover::before{opacity:1}
+.cat-btn:hover::after{width:60%}
+.cat-btn.active{background:linear-gradient(135deg,rgba(0,232,122,.14),rgba(0,232,122,.05));border-color:var(--green);color:var(--green);box-shadow:0 0 40px rgba(0,232,122,.15),inset 0 0 20px rgba(0,232,122,.06);transform:translateY(-3px)}
+.cat-btn.active::before,.cat-btn:hover::before{opacity:1}
+.cat-btn.active::after{width:60%}
+.cat-icon{display:inline-flex;align-items:center;justify-content:center;margin-right:9px;vertical-align:middle;opacity:.75;transition:opacity .3s,transform .3s}
+.cat-btn:hover .cat-icon,.cat-btn.active .cat-icon{opacity:1;transform:scale(1.12)}
+.cat-btn.active .cat-icon svg{stroke:var(--green)}
+.cat-btn:hover .cat-icon svg{stroke:var(--white)}
+
+/* ── CURRENCY ROW UNDER FILTER ── */
+.currency-row{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:14px 18px;border-radius:18px;
+  background:rgba(255,255,255,.025);border:1px solid var(--border);
+}
+.currency-row-label{
+  font-family:'Space Mono',monospace;font-size:.58rem;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--white3);
+  flex-shrink:0;padding-right:6px;border-right:1px solid var(--border);
+  margin-right:4px;
+}
+.curr-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:12px;
+  font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;
+  cursor:pointer;border:1px solid var(--border);background:var(--glass2);color:var(--white2);
+  transition:all .35s cubic-bezier(.23,1,.32,1);white-space:nowrap;position:relative;
+  letter-spacing:.04em;
+}
+.curr-pill:hover{border-color:var(--green-border);color:var(--green);background:var(--green-dim);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,232,122,.12)}
+.curr-pill.active{
+  border-color:var(--green);color:var(--green);
+  background:linear-gradient(135deg,rgba(0,232,122,.14),rgba(0,232,122,.05));
+  box-shadow:0 0 30px rgba(0,232,122,.15),inset 0 0 12px rgba(0,232,122,.06);
+  transform:translateY(-2px);
+}
+.curr-pill-flag{font-size:.9rem}
+.curr-pill-code{font-weight:700}
+.curr-pill-name{font-size:.58rem;color:inherit;opacity:.7;font-weight:400}
+.curr-live-badge{
+  display:flex;align-items:center;gap:5px;
+  font-family:'Space Mono',monospace;font-size:.55rem;color:var(--white3);
+  padding:4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.05);
+  margin-left:auto;flex-shrink:0;
+}
+.curr-live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite;flex-shrink:0}
+
+/* PRICING SECTION */
+.pricing-section{max-width:1140px;margin:0 auto;padding:0 32px 100px}
+/* CURRENCY BANNER */
+.currency-banner{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:40px;padding:12px 24px;
+  background:rgba(0,232,122,.04);border:1px solid var(--green-border);border-radius:14px;
+  font-size:.75rem;color:var(--white3);font-family:'Space Mono',monospace;
+  opacity:0;transform:translateY(10px);transition:all .5s cubic-bezier(.23,1,.32,1);
+}
+.currency-banner.visible{opacity:1;transform:translateY(0)}
+.currency-banner .curr-flag{font-size:1rem}
+.currency-banner .curr-info{color:var(--green);font-weight:700}
+.currency-banner .curr-note{opacity:.6;font-size:.62rem}
+
+.cards-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;
+  transition:opacity .35s ease,transform .35s ease;contain:layout;
+}
+.cards-grid.transitioning{opacity:0;transform:translateY(20px)}
+@media(max-width:980px){.cards-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.cards-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+
+/* CARD */
+.card{
+  position:relative;border-radius:24px;padding:32px 26px 30px;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);
+  transition:border-color .3s ease,box-shadow .3s ease,transform .3s ease;
+  overflow:hidden;cursor:default;
+  opacity:0;transform:translateY(30px);
+}
+.card.visible{opacity:1;transform:translateY(0)}
+.card::before{content:'';position:absolute;inset:0;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.04),transparent 60%);pointer-events:none}
+.card:hover{border-color:rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.card-corner{position:absolute;top:0;right:0;width:60px;height:60px;background:conic-gradient(from 225deg at 100% 0%,transparent 0deg,rgba(0,232,122,.12) 90deg,transparent 90deg);border-radius:0 24px 0 0}
+.card.featured{border-color:var(--green);background:linear-gradient(160deg,rgba(0,232,122,.08) 0%,rgba(0,232,122,.03) 55%,rgba(255,255,255,.02) 100%);box-shadow:0 0 50px rgba(0,232,122,.1),0 0 0 1px var(--green)}
+.card.featured:hover{box-shadow:0 0 70px rgba(0,232,122,.18),0 30px 80px rgba(0,0,0,.5),0 0 0 1px var(--green)}
+.card.featured .card-corner{background:conic-gradient(from 225deg at 100% 0%,transparent 0deg,rgba(0,232,122,.3) 90deg,transparent 90deg)}
+.card-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:var(--black);font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border-radius:100px;margin-bottom:20px}
+.card-badge-dim{display:inline-flex;align-items:center;gap:6px;background:var(--glass2);border:1px solid var(--border);color:var(--white3);font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border-radius:100px;margin-bottom:20px}
+.card-tier{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--white3);margin-bottom:10px}
+.card-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.25rem,1.7vw,1.6rem);letter-spacing:-.02em;margin-bottom:10px;color:var(--white)}
+.card-desc{font-size:.78rem;color:var(--white3);line-height:1.65;margin-bottom:24px;font-weight:300}
+/* PRICE */
+.price-wrap{display:flex;align-items:baseline;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.price-currency{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--white3);transition:all .4s ease}
+.price-num{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.1rem,2.6vw,2.8rem);
+  letter-spacing:-.04em;line-height:1;color:var(--white);
+  transition:all .4s cubic-bezier(.23,1,.32,1);position:relative;
+}
+.price-num.animating{animation:priceFlip .4s cubic-bezier(.23,1,.32,1)}
+@keyframes priceFlip{0%{transform:translateY(0);opacity:1}40%{transform:translateY(-8px);opacity:0}60%{transform:translateY(8px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.card.featured .price-num{color:var(--green)}
+.price-note{font-size:.66rem;color:var(--white3);font-weight:300}
+.divider{height:1px;margin-bottom:20px;background:linear-gradient(90deg,transparent,var(--border),transparent);position:relative;overflow:visible}
+.divider::after{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:40px;height:3px;background:linear-gradient(90deg,var(--green2),var(--green3));border-radius:2px;box-shadow:0 0 10px var(--green);opacity:0;transition:opacity .4s}
+.card:hover .divider::after{opacity:1}
+.features-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.features-list li{display:flex;align-items:flex-start;gap:10px;font-size:.78rem;color:var(--white2);line-height:1.5;transition:transform .3s ease,color .3s}
+.features-list li:hover{transform:translateX(4px);color:var(--white)}
+.check{flex-shrink:0;width:17px;height:17px;border-radius:50%;background:var(--green-dim);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .3s ease}
+.features-list li:hover .check{background:rgba(0,232,122,.2);box-shadow:0 0 10px rgba(0,232,122,.3)}
+.check svg{width:8px;height:8px}
+.card.featured .check{background:rgba(0,232,122,.15);border-color:var(--green)}
+.delivery-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,232,122,.06);border:1px solid var(--green-border);border-radius:8px;padding:5px 11px;font-size:.67rem;color:var(--green2);font-weight:500;margin-bottom:20px}
+/* CTA */
+.cta-btn{width:100%;padding:15px 20px;border-radius:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;letter-spacing:.03em;cursor:pointer;border:none;position:relative;overflow:hidden;transition:all .5s cubic-bezier(.23,1,.32,1)}
+.cta-btn-outline{background:transparent;border:1px solid var(--border);color:var(--white2)}
+.cta-btn-outline:hover{border-color:var(--green-border);color:var(--white);background:var(--green-dim);transform:translateY(-2px)}
+.cta-btn-primary{background:linear-gradient(135deg,var(--green),var(--green2));color:var(--black);box-shadow:0 8px 32px rgba(0,232,122,.32)}
+.cta-btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .7s ease}
+.cta-btn-primary:hover::after{left:100%}
+.cta-btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,232,122,.45)}
+/* INSTALLMENT */
+.installment-block{margin-top:20px;border-radius:14px;border:1px solid rgba(255,180,0,.25);background:linear-gradient(135deg,rgba(255,180,0,.06),rgba(255,140,0,.03));overflow:hidden}
+.installment-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;gap:10px;transition:background .3s}
+.installment-header:hover{background:rgba(255,180,0,.04)}
+.installment-header-left{display:flex;align-items:center;gap:8px}
+.installment-icon{width:28px;height:28px;border-radius:8px;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.3);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.installment-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.73rem;color:var(--gold);letter-spacing:.01em}
+.installment-subtitle{font-size:.62rem;color:rgba(255,180,0,.6);font-weight:300;margin-top:1px}
+.installment-arrow{color:rgba(255,180,0,.5);font-size:.65rem;transition:transform .4s cubic-bezier(.23,1,.32,1);flex-shrink:0}
+.installment-block.open .installment-arrow{transform:rotate(180deg)}
+.installment-body{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.23,1,.32,1)}
+.installment-block.open .installment-body{max-height:320px}
+.installment-inner{padding:0 16px 16px;border-top:1px solid rgba(255,180,0,.1)}
+.installment-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.installment-row:last-child{border-bottom:none}
+.installment-label{font-size:.68rem;color:var(--white3);font-weight:300;display:flex;align-items:center;gap:6px}
+.installment-label .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.5;flex-shrink:0}
+.installment-val{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gold);font-weight:700}
+.installment-warning{margin-top:12px;padding:8px 12px;border-radius:9px;background:rgba(255,60,60,.06);border:1px solid rgba(255,60,60,.15);font-size:.65rem;color:rgba(255,100,100,.85);line-height:1.5;display:flex;gap:6px;align-items:flex-start}
+.installment-warning-icon{flex-shrink:0;margin-top:1px}
+.first-pay-highlight{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:7px;background:rgba(255,180,0,.15);color:var(--gold);border:1px solid rgba(255,180,0,.25)}
+/* SECTION TITLE */
+.section-title{text-align:center;margin-bottom:56px}
+.section-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+.section-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.2vw,2.6rem);letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
+.section-p{font-size:.9rem;color:var(--white3);max-width:480px;margin:0 auto;line-height:1.75;font-weight:300}
+/* LOYALTY */
+.loyalty-section{background:var(--black3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 32px;position:relative;overflow:hidden}
+.loyalty-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1000px;height:1px;background:linear-gradient(90deg,transparent,var(--green-border),transparent)}
+.loyalty-section::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:1000px;height:1px;background:linear-gradient(90deg,transparent,var(--green-border),transparent)}
+.loyalty-inner{max-width:1060px;margin:0 auto}
+.loyalty-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:640px){.loyalty-grid{grid-template-columns:1fr}}
+.loyalty-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:20px;padding:30px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s,box-shadow .3s;opacity:0;transform:translateY(30px)}
+.loyalty-card.visible{opacity:1;transform:translateY(0)}
+.loyalty-card:hover{border-color:var(--green-border);transform:translateY(-5px);box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.loyalty-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;transition:opacity .5s}
+.loyalty-card:hover::before{opacity:1}
+.loyalty-card::after{content:'';position:absolute;bottom:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,122,.06),transparent 70%);transition:all .5s ease}
+.loyalty-card:hover::after{width:120px;height:120px;bottom:-30px;right:-30px;background:radial-gradient(circle,rgba(0,232,122,.1),transparent 70%)}
+.loyalty-icon{width:46px;height:46px;border-radius:14px;background:var(--green-dim);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:18px;transition:all .4s ease}
+.loyalty-card:hover .loyalty-icon{transform:scale(1.1) rotate(-5deg);box-shadow:0 0 20px rgba(0,232,122,.2)}
+.loyalty-h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px;color:var(--white)}
+.loyalty-p{font-size:.78rem;color:var(--white3);line-height:1.75;margin-bottom:20px;font-weight:300}
+.progress-track{height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green2),var(--green3));box-shadow:0 0 12px var(--green);width:0%;transition:width 1.8s cubic-bezier(.23,1,.32,1)}
+.progress-label{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--white3)}
+.progress-label .val{color:var(--green);font-weight:700}
+/* TRUST BAR */
+.trust-bar{display:flex;justify-content:center;align-items:center;gap:0;flex-wrap:wrap;padding:0 32px;max-width:1100px;margin:0 auto}
+.trust-item{display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--white3);padding:36px 28px;border-right:1px solid var(--border);transition:all .4s ease;position:relative;overflow:hidden}
+.trust-item:last-child{border-right:none}
+.trust-item::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);transition:width .4s ease}
+.trust-item:hover{color:var(--white)}
+.trust-item:hover::after{width:80%}
+.trust-item-icon{color:var(--green);font-size:1rem}
+/* TOAST */
+#toast{
+  position:fixed;bottom:32px;right:32px;
+  background:rgba(10,10,15,.95);border:1px solid var(--green);border-radius:18px;
+  padding:22px 26px;max-width:310px;
+  box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 40px rgba(0,232,122,.12);
+  transform:translateX(130%);transition:transform .6s cubic-bezier(.23,1,.32,1);
+  z-index:1000;backdrop-filter:blur(24px);
+}
+#toast.show{transform:translateX(0)}
+.toast-icon{font-size:1.5rem;margin-bottom:8px}
+.toast-title{font-family:'Syne',sans-serif;font-weight:700;color:var(--green);margin-bottom:6px;font-size:.9rem}
+.toast-msg{font-size:.75rem;color:var(--white2);line-height:1.55}
+.toast-bar{height:2px;background:rgba(0,232,122,.2);border-radius:2px;margin-top:14px;overflow:hidden}
+.toast-bar-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--green2),var(--green3));transform-origin:left;animation:toastTimer 4s linear forwards}
+@keyframes toastTimer{to{transform:scaleX(0);transform-origin:right}}
+/* FLOATING CTA */
+.floating-cta{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);z-index:100;
+  background:rgba(5,5,8,.85);border:1px solid var(--green-border);border-radius:100px;
+  padding:12px 28px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(20px);
+  box-shadow:0 16px 60px rgba(0,0,0,.5),0 0 30px rgba(0,232,122,.1);
+  transition:transform .6s cubic-bezier(.23,1,.32,1);font-size:.78rem;color:var(--white2);
+  pointer-events:none;white-space:nowrap;
+}
+.floating-cta.visible{transform:translateX(-50%) translateY(0)}
+.floating-cta-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 2s infinite}
+/* RTL */
+[dir="rtl"] .logo::after{background:linear-gradient(270deg,var(--green),transparent)}
+[dir="rtl"] .features-list li{flex-direction:row-reverse;text-align:right}
+[dir="rtl"] .card-badge,[dir="rtl"] .card-badge-dim{flex-direction:row-reverse}
+[dir="rtl"] .delivery-badge{flex-direction:row-reverse}
+[dir="rtl"] .installment-header{flex-direction:row-reverse}
+[dir="rtl"] .installment-header-left{flex-direction:row-reverse}
+[dir="rtl"] .installment-row{flex-direction:row-reverse}
+[dir="rtl"] .installment-label{flex-direction:row-reverse}
+[dir="rtl"] .progress-label{flex-direction:row-reverse}
+[dir="rtl"] .trust-item{flex-direction:row-reverse;border-right:none;border-left:1px solid var(--border)}
+[dir="rtl"] .trust-item:last-child{border-left:none}
+[dir="rtl"] .price-wrap{flex-direction:row-reverse;justify-content:flex-end}
+[dir="rtl"] .status-pill{flex-direction:row-reverse}
+[dir="rtl"] .currency-row{flex-direction:row-reverse}
+[dir="rtl"] .currency-row-label{padding-right:0;padding-left:6px;border-right:none;border-left:1px solid var(--border);margin-right:0;margin-left:4px}
+[dir="rtl"] .curr-live-badge{margin-left:0;margin-right:auto}
+[dir="rtl"] .features-list li:hover{transform:translateX(-4px)}
+[lang="ar"] .card-desc,[lang="ar"] .loyalty-p,[lang="ar"] .features-list li,[lang="ar"] .hero-sub{font-size:clamp(.83rem,1.1vw,.93rem);line-height:1.9}
+[lang="ar"] .hero-h1{font-size:clamp(1.7rem,3.2vw,3rem)}
+/* MOBILE */
+@media(max-width:640px){
+  nav{padding:14px 20px}
+  .lang-btn{padding:4px 9px;font-size:.66rem}
+  #toast{right:16px;bottom:16px;left:16px;max-width:none}
+  .pricing-section{padding:0 16px 70px}
+  .loyalty-section{padding:72px 16px}
+  .status-pill{display:none}
+  .trust-bar{flex-direction:column}
+  .trust-item{border-right:none;border-bottom:1px solid var(--border);width:100%;justify-content:center}
+  .trust-item:last-child{border-bottom:none}
+  .stats-bar{flex-direction:column;gap:2px}
+  .stat-item:first-child{border-radius:18px 18px 0 0}
+  .stat-item:last-child{border-radius:0 0 18px 18px}
+  .floating-cta{display:none}
+  .currency-row{gap:7px}
+  .curr-pill-name{display:none}
+  .curr-live-badge{display:none}
+  .filter-currency-block{padding:0 16px 40px}
+}
+::selection{background:rgba(0,232,122,.2);color:var(--green)}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<nav id="main-nav">
+  <div class="logo">digital<span>Fler</span></div>
+  <div class="nav-right">
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span style="font-size:.6rem;letter-spacing:.12em" data-i18n="statusText">AVAILABLE FOR PROJECTS</span>
+    </div>
+    <div class="lang-switcher" id="langSwitch">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="ar">AR</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <div class="hero-phrase">
+    <div class="hero-tag"><div class="hero-tag-dot"></div><span data-i18n="tag"></span></div>
+    <h1 class="hero-h1">
+      <span class="line"><span class="line-inner" data-i18n="h1a"></span></span>
+      <span class="line"><span class="line-inner accent" data-text="" data-i18n="h1b"></span></span>
+      <span class="line"><span class="line-inner" data-i18n="h1c"></span></span>
+    </h1>
+    <p class="hero-sub" data-i18n="heroSub"></p>
+    <div class="scroll-indicator">
+      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+      <span data-i18n="scrollText">Scroll to explore</span>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <div class="stat-num" data-count="120">0</div>
+      <div class="stat-label" data-i18n="stat1">Projects Delivered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="98">0</div>
+      <div class="stat-label" data-i18n="stat2">Client Satisfaction %</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="4">0</div>
+      <div class="stat-label" data-i18n="stat3">Languages Supported</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="5">0</div>
+      <div class="stat-label" data-i18n="stat4">Years of Excellence</div>
+    </div>
+  </div>
+
+  <!-- FILTER + CURRENCY BLOCK -->
+  <div class="filter-currency-block" id="filterCurrencyBlock">
+
+    <!-- Category Buttons -->
+    <div class="filter-wrap" id="filterWrap">
+      <button class="cat-btn active" data-cat="websites">
+        <span class="cat-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/>
+            <circle cx="7.5" cy="6" r=".8" fill="currentColor" stroke="none"/>
+            <circle cx="10.5" cy="6" r=".8" fill="currentColor" stroke="none"/>
+            <circle cx="13.5" cy="6" r=".8" fill="currentColor" stroke="none"/>
+            <path d="M7 14h4M7 17h6" stroke-width="1.4"/>
+          </svg>
+        </span>
+        <span data-i18n="catWeb"></span>
+      </button>
+      <button class="cat-btn" data-cat="ecommerce">
+        <span class="cat-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </span>
+        <span data-i18n="catEcom"></span>
+      </button>
+      <button class="cat-btn" data-cat="apps">
+        <span class="cat-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="2" width="10" height="20" rx="3"/>
+            <circle cx="12" cy="18.5" r="1" fill="currentColor" stroke="none"/>
+            <line x1="10" y1="5.5" x2="14" y2="5.5" stroke-width="1.4"/>
+          </svg>
+        </span>
+        <span data-i18n="catApp"></span>
+      </button>
+    </div>
+
+    <!-- Currency Selector Row -->
+    <div class="currency-row" id="currencyRow">
+      <span class="currency-row-label" data-i18n="currLabel">CURRENCY</span>
+
+      <!-- EUR — Base -->
+      <div class="curr-pill active" data-currency="EUR" data-flag="🇪🇺" data-name-en="Euro" data-name-fr="Euro" data-name-ar="يورو" data-name-es="Euro" data-rate="1" data-symbol="€" data-decimals="2" onclick="selectCurrency(this)">
+        <span class="curr-pill-flag">🇪🇺</span>
+        <span class="curr-pill-code">EUR</span>
+        <span class="curr-pill-name" data-i18n-curr="EUR"></span>
+      </div>
+
+      <!-- USD -->
+      <div class="curr-pill" data-currency="USD" data-flag="🇺🇸" data-name-en="US Dollar" data-name-fr="Dollar US" data-name-ar="دولار أمريكي" data-name-es="Dólar Americano" data-rate="1.08" data-symbol="$" data-decimals="2" onclick="selectCurrency(this)">
+        <span class="curr-pill-flag">🇺🇸</span>
+        <span class="curr-pill-code">USD</span>
+        <span class="curr-pill-name" data-i18n-curr="USD"></span>
+      </div>
+
+      <!-- MAD -->
+      <div class="curr-pill" data-currency="MAD" data-flag="🇲🇦" data-name-en="Moroccan Dirham" data-name-fr="Dirham Marocain" data-name-ar="درهم مغربي" data-name-es="Dírham Marroquí" data-rate="11.65" data-symbol="د.م." data-decimals="0" onclick="selectCurrency(this)">
+        <span class="curr-pill-flag">🇲🇦</span>
+        <span class="curr-pill-code">MAD</span>
+        <span class="curr-pill-name" data-i18n-curr="MAD"></span>
+      </div>
+
+      <!-- AED Gulf -->
+      <div class="curr-pill" data-currency="AED" data-flag="🇦🇪" data-name-en="Gulf Dirham" data-name-fr="Dirham du Golfe" data-name-ar="درهم خليجي" data-name-es="Dírham del Golfo" data-rate="3.97" data-symbol="د.إ" data-decimals="0" onclick="selectCurrency(this)">
+        <span class="curr-pill-flag">🇦🇪</span>
+        <span class="curr-pill-code">AED</span>
+        <span class="curr-pill-name" data-i18n-curr="AED"></span>
+      </div>
+
+      <div class="curr-live-badge">
+        <div class="curr-live-dot"></div>
+        <span data-i18n="currLive">Live rates</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section class="pricing-section">
+    <div class="currency-banner" id="currencyBanner">
+      <span class="curr-flag" id="bannerFlag">🇪🇺</span>
+      <span data-i18n="bannerText">Prices shown in</span>
+      <span class="curr-info" id="bannerCurrency">EUR — Euro</span>
+      <span class="curr-note" id="bannerNote"></span>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </section>
+
+  <!-- LOYALTY -->
+  <section class="loyalty-section">
+    <div class="loyalty-inner">
+      <div class="section-title">
+        <div class="section-label" data-i18n="loyaltyLabel"></div>
+        <h2 class="section-h2" data-i18n="loyaltyH2"></h2>
+        <p class="section-p" data-i18n="loyaltySub"></p>
+      </div>
+      <div class="loyalty-grid" id="loyaltyGrid">
+        <div class="loyalty-card">
+          <div class="loyalty-icon">🔁</div>
+          <h3 class="loyalty-h3" data-i18n="l1h"></h3>
+          <p class="loyalty-p" data-i18n="l1p"></p>
+          <div class="progress-track"><div class="progress-fill" data-progress="70"></div></div>
+          <div class="progress-label"><span data-i18n="l1s"></span><span class="val">Up to 50%</span></div>
+        </div>
+        <div class="loyalty-card">
+          <div class="loyalty-icon">✏️</div>
+          <h3 class="loyalty-h3" data-i18n="l2h"></h3>
+          <p class="loyalty-p" data-i18n="l2p"></p>
+          <div class="progress-track"><div class="progress-fill" data-progress="45"></div></div>
+          <div class="progress-label"><span data-i18n="l2s"></span><span class="val">10% from R5</span></div>
+        </div>
+        <div class="loyalty-card">
+          <div class="loyalty-icon">🤝</div>
+          <h3 class="loyalty-h3" data-i18n="l3h"></h3>
+          <p class="loyalty-p" data-i18n="l3p"></p>
+          <div class="progress-track"><div class="progress-fill" data-progress="35"></div></div>
+          <div class="progress-label"><span data-i18n="l3s"></span><span class="val">Up to 35%</span></div>
+        </div>
+        <div class="loyalty-card">
+          <div class="loyalty-icon">💎</div>
+          <h3 class="loyalty-h3" data-i18n="l4h"></h3>
+          <p class="loyalty-p" data-i18n="l4p"></p>
+          <div class="progress-track"><div class="progress-fill" data-progress="25"></div></div>
+          <div class="progress-label"><span data-i18n="l4s"></span><span class="val">25% off</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item"><span class="trust-item-icon">✓</span><span data-i18n="t1"></span></div>
+    <div class="trust-item"><span class="trust-item-icon">⚡</span><span data-i18n="t2"></span></div>
+    <div class="trust-item"><span class="trust-item-icon">🔒</span><span data-i18n="t3"></span></div>
+    <div class="trust-item"><span class="trust-item-icon">💬</span><span data-i18n="t4"></span></div>
+    <div class="trust-item"><span class="trust-item-icon">🌍</span><span data-i18n="t5"></span></div>
+  </div>
+</main>
+
+<div class="floating-cta" id="floatingCta">
+  <div class="floating-cta-dot"></div>
+  <span data-i18n="floatingCta">Ready to start? Choose your package above ↑</span>
+</div>
+
+<div id="toast">
+  <div class="toast-icon">✅</div>
+  <div class="toast-title" data-i18n="toastTitle"></div>
+  <div class="toast-msg" data-i18n="toastMsg"></div>
+  <div class="toast-bar"><div class="toast-bar-fill" id="toastBarFill"></div></div>
+</div>
+
+<script>
+/* ══ SCROLL — lightweight ══ */
+window.addEventListener('scroll',()=>{
+  const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+  document.getElementById('scroll-progress').style.width=((y/h)*100)+'%';
+  document.getElementById('main-nav').classList.toggle('scrolled',y>60);
+  document.getElementById('floatingCta').classList.toggle('visible',y>400);
+},{passive:true});
+
+/* ══ TRANSLATIONS ══ */
+const i18n={
+  en:{
+    tag:'Pricing 2026 — Crafted for Ambition',
+    h1a:"We don't just build websites.",h1b:'We build digital experiences',h1c:'that grow businesses.',
+    heroSub:'Choose your path. Every package is engineered to deliver results — not just designs.',
+    scrollText:'Scroll to explore',statusText:'AVAILABLE FOR PROJECTS',
+    stat1:'Projects Delivered',stat2:'Client Satisfaction %',stat3:'Languages Supported',stat4:'Years of Excellence',
+    catWeb:'Websites',catEcom:'E-commerce',catApp:'Mobile Apps',
+    currLabel:'CURRENCY',currLive:'Live rates',bannerText:'Prices shown in',
+    EUR:'Euro',USD:'US Dollar',MAD:'Moroccan Dirham',AED:'Gulf Dirham',
+    loyaltyLabel:'Rewards System',
+    loyaltyH2:'Built on loyalty. Rewarded for growth.',
+    loyaltySub:"Every collaboration deepens the partnership. Here's how we reward your trust.",
+    l1h:'Cumulative Loyalty Discount',l1p:'Every service earns you +5% off — stacking up to 50% lifetime discount.',l1s:'5% per order',
+    l2h:'Smart Revision Policy',l2p:'Normal revisions included. From revision 5 onward, pay only 10% of the package.',l2s:'Free revisions',
+    l3h:'Referral Reward',l3p:'Refer a paying client and receive up to 35% off your next service.',l3s:'Per referral',
+    l4h:'Returning Client Rate',l4p:'Returning clients pay only 75% of the original price — applied automatically.',l4s:'Returning order',
+    t1:'100% Satisfaction Guarantee',t2:'Fast Delivery',t3:'Secure & Reliable',t4:'24/7 Support',t5:'Multi-Language Ready',
+    toastTitle:'Request Prepared!',toastMsg:'Redirecting to WhatsApp — our team will respond quickly.',
+    floatingCta:'Ready to start? Choose your package ↑',
+    inst_title:'Installment Plan',inst_sub:'Pay in 6 easy steps',
+    inst_first:'Pay now (50%)',inst_monthly:'Monthly × 5 months',
+    inst_start:'Counter starts after delivery',inst_warn:'Non-payment results in immediate project suspension.',
+  },
+  fr:{
+    tag:"Tarifs 2026 — Créé pour l'Ambition",
+    h1a:'Nous ne créons pas que des sites.',h1b:'Nous créons des expériences digitales',h1c:'qui font croître les entreprises.',
+    heroSub:'Choisissez votre voie. Chaque forfait est conçu pour des résultats concrets.',
+    scrollText:'Défiler pour explorer',statusText:'DISPONIBLE POUR PROJETS',
+    stat1:'Projets Livrés',stat2:'Satisfaction Client %',stat3:'Langues Supportées',stat4:"Années d'Excellence",
+    catWeb:'Sites Web',catEcom:'E-commerce',catApp:'Applications',
+    currLabel:'DEVISE',currLive:'Taux en direct',bannerText:'Prix affichés en',
+    EUR:'Euro',USD:'Dollar Américain',MAD:'Dirham Marocain',AED:'Dirham du Golfe',
+    loyaltyLabel:'Programme de Fidélité',
+    loyaltyH2:'Basé sur la fidélité. Récompensé pour la croissance.',
+    loyaltySub:'Chaque collaboration approfondit le partenariat.',
+    l1h:'Remise Fidélité Cumulative',l1p:"Chaque commande vous donne +5% de remise — jusqu'à 50% à vie.",l1s:'5% par commande',
+    l2h:'Politique de Révision Intelligente',l2p:"Révisions incluses. Dès la 5ème, vous payez seulement 10%.",l2s:'Révisions gratuites',
+    l3h:'Programme de Parrainage',l3p:"Recommandez un client et obtenez jusqu'à 35% de réduction.",l3s:'Par parrainage',
+    l4h:'Tarif Client Fidèle',l4p:'Les clients fidèles paient 75% du prix original — appliqué automatiquement.',l4s:'Commande retour',
+    t1:'Satisfaction 100% Garantie',t2:'Livraison Rapide',t3:'Sécurisé & Fiable',t4:'Support 24/7',t5:'Multilingue',
+    toastTitle:'Demande Préparée!',toastMsg:'Redirection vers WhatsApp.',
+    floatingCta:'Prêt à commencer? Choisissez votre forfait ↑',
+    inst_title:'Plan de Paiement',inst_sub:'Payez en 6 étapes',
+    inst_first:'À payer maintenant (50%)',inst_monthly:'Mensuel × 5 mois',
+    inst_start:'Compteur démarre après livraison',inst_warn:'Le non-paiement entraîne la suspension immédiate.',
+  },
+  ar:{
+    tag:'أسعار 2026 — صُممت للطموح',
+    h1a:'نحن لا نبني مواقع فقط.',h1b:'نبني تجارب رقمية',h1c:'تنمّي الأعمال.',
+    heroSub:'اختر مسارك. كل باقة مصممة لتحقيق نتائج حقيقية، لا مجرد تصاميم.',
+    scrollText:'مرر للاستكشاف',statusText:'متاح للمشاريع',
+    stat1:'مشروع مُسلَّم',stat2:'رضا العملاء %',stat3:'لغات مدعومة',stat4:'سنوات من التميز',
+    catWeb:'المواقع',catEcom:'التجارة الإلكترونية',catApp:'تطبيقات الجوال',
+    currLabel:'العملة',currLive:'أسعار مباشرة',bannerText:'الأسعار تظهر بـ',
+    EUR:'يورو',USD:'دولار أمريكي',MAD:'درهم مغربي',AED:'درهم خليجي',
+    loyaltyLabel:'نظام المكافآت',
+    loyaltyH2:'مبني على الولاء. مكافأة على النمو.',
+    loyaltySub:'كل تعاون يعمّق الشراكة. إليك كيف نكافئ ثقتك.',
+    l1h:'خصم الولاء التراكمي',l1p:'كل خدمة تطلبها تمنحك 5% خصم إضافي — حتى 50% خصم مدى الحياة.',l1s:'5% لكل طلب',
+    l2h:'سياسة التعديلات الذكية',l2p:'التعديلات العادية مشمولة. من التعديل الخامس تدفع فقط 10%.',l2s:'تعديلات مجانية',
+    l3h:'مكافأة الإحالة',l3p:'أحل عميلًا واحصل على خصم يصل إلى 35% على خدمتك التالية.',l3s:'لكل إحالة',
+    l4h:'سعر العميل المتكرر',l4p:'العملاء المتكررون يدفعون 75% فقط — يُطبَّق تلقائيًا.',l4s:'طلب متكرر',
+    t1:'ضمان رضا 100%',t2:'تسليم سريع',t3:'آمن وموثوق',t4:'دعم 24/7',t5:'دعم متعدد اللغات',
+    toastTitle:'تم تحضير طلبك!',toastMsg:'جاري التوجيه إلى واتساب — فريقنا سيرد بسرعة.',
+    floatingCta:'جاهز للبدء؟ اختر باقتك ↑',
+    inst_title:'التقسيط متاح',inst_sub:'ادفع على 6 مراحل',
+    inst_first:'ادفع الآن (50%)',inst_monthly:'شهريًا × 5 أشهر',
+    inst_start:'العداد يبدأ بعد التسليم',inst_warn:'عدم السداد يؤدي إلى توقيف المشروع فورًا.',
+  },
+  es:{
+    tag:'Precios 2026 — Diseñado para la Ambición',
+    h1a:'No solo construimos sitios web.',h1b:'Construimos experiencias digitales',h1c:'que hacen crecer negocios.',
+    heroSub:'Elige tu camino. Cada paquete está diseñado para entregar resultados reales.',
+    scrollText:'Desplázate para explorar',statusText:'DISPONIBLE PARA PROYECTOS',
+    stat1:'Proyectos Entregados',stat2:'Satisfacción del Cliente %',stat3:'Idiomas Soportados',stat4:'Años de Excelencia',
+    catWeb:'Sitios Web',catEcom:'E-commerce',catApp:'Apps Móviles',
+    currLabel:'MONEDA',currLive:'Tasas en vivo',bannerText:'Precios en',
+    EUR:'Euro',USD:'Dólar Americano',MAD:'Dírham Marroquí',AED:'Dírham del Golfo',
+    loyaltyLabel:'Sistema de Recompensas',
+    loyaltyH2:'Construido en lealtad. Recompensado por crecer.',
+    loyaltySub:'Cada colaboración profundiza la alianza.',
+    l1h:'Descuento de Lealtad Acumulativo',l1p:'Cada servicio te da +5% de descuento — hasta 50% de por vida.',l1s:'5% por pedido',
+    l2h:'Política de Revisiones Inteligente',l2p:'Revisiones incluidas. Desde la 5ª solo pagas el 10%.',l2s:'Revisiones gratis',
+    l3h:'Recompensa por Referidos',l3p:'Refiere un cliente y recibe hasta 35% de descuento.',l3s:'Por referido',
+    l4h:'Tarifa Cliente Habitual',l4p:'Clientes habituales pagan solo el 75% — aplicado automáticamente.',l4s:'Pedido de regreso',
+    t1:'Garantía de Satisfacción 100%',t2:'Entrega Rápida',t3:'Seguro y Confiable',t4:'Soporte 24/7',t5:'Multilingüe',
+    toastTitle:'¡Solicitud Preparada!',toastMsg:'Redirigiendo a WhatsApp.',
+    floatingCta:'¿Listo para empezar? Elige tu paquete ↑',
+    inst_title:'Plan de Pago',inst_sub:'Paga en 6 pasos',
+    inst_first:'Pagar ahora (50%)',inst_monthly:'Mensual × 5 meses',
+    inst_start:'Contador inicia tras entrega',inst_warn:'El impago resulta en suspensión inmediata.',
+  }
+};
+
+/* ══ PACKAGES (prices in EUR) ══ */
+const packages={
+  websites:[
+    {tier:{en:'Starter',fr:'Débutant',ar:'مبتدئ',es:'Inicial'},
+    name:{en:'Launch',fr:'Lancement',ar:'إطلاق',es:'Lanzamiento'},
+    desc:{en:'Perfect for individuals & small businesses ready to establish a credible online presence.',fr:"Idéal pour les particuliers et les petites entreprises.",ar:'مثالي للأفراد والشركات الصغيرة.',es:'Perfecto para individuos y pequeñas empresas.'},
+    price:299,
+    delivery:{en:'10–14 days',fr:'10–14 jours',ar:'10–14 يوم',es:'10–14 días'},
+    badge:null,featured:false,
+    cta:{en:'Start My Project',fr:'Démarrer Mon Projet',ar:'ابدأ مشروعي',es:'Iniciar Mi Proyecto'},
+    features:{en:['Elegant responsive design (5–7 pages)','Mobile-first performance optimization','On-page SEO setup & meta configuration','Contact form & Google Maps integration','SSL security & fast hosting setup','WhatsApp chat button integration','2 revision rounds included','30-day post-launch support'],
+    fr:['Design responsive élégant (5–7 pages)','Optimisation mobile en priorité','Configuration SEO on-page','Formulaire de contact & Google Maps','SSL & hébergement rapide','Bouton WhatsApp intégré','2 cycles de révisions','Support 30 jours'],
+    ar:['تصميم متجاوب أنيق (5-7 صفحات)','تحسين الأداء للهاتف أولاً','إعداد SEO والميتا داتا','نموذج تواصل وخرائط جوجل','شهادة SSL وإعداد استضافة','زر واتساب مدمج','جولتان من التعديلات','دعم 30 يوم'],
+    es:['Diseño responsive (5–7 páginas)','Optimización mobile-first','SEO on-page y meta','Formulario y Google Maps','SSL y hosting rápido','Botón WhatsApp','2 rondas de revisión','Soporte 30 días']}},
+    {tier:{en:'Professional',fr:'Professionnel',ar:'احترافي',es:'Profesional'},
+    name:{en:'Elevate',fr:'Élever',ar:'ارتقاء',es:'Elevar'},
+    desc:{en:'For growing brands that need a powerful digital identity with advanced functionality.',fr:"Pour les marques en croissance.",ar:'للعلامات التجارية النامية التي تحتاج إلى هوية رقمية قوية.',es:'Para marcas en crecimiento.'},
+    price:699,
+    delivery:{en:'14–21 days',fr:'14–21 jours',ar:'14–21 يوم',es:'14–21 días'},
+    badge:{en:'Most Popular',fr:'Plus Populaire',ar:'الأكثر طلباً',es:'Más Popular'},featured:true,
+    cta:{en:'Build My Brand',fr:'Construire Ma Marque',ar:'ابنِ علامتي',es:'Construir Mi Marca'},
+    features:{en:['Premium custom UI/UX (up to 12 pages)','Advanced animations & micro-interactions','Full CMS integration (manage yourself)','Multi-language support (AR, EN, FR)','Blog system with SEO optimization','Analytics dashboard integration','WhatsApp & live chat system','4 revision rounds','60-day premium support'],
+    fr:["Design UI/UX premium (jusqu'à 12 pages)",'Animations avancées','Intégration CMS complète','Support multi-langue','Blog avec SEO','Tableau de bord analytics','WhatsApp & live chat','4 révisions','Support 60 jours'],
+    ar:['تصميم UI/UX مميز (حتى 12 صفحة)','حركات متقدمة وتفاعلات دقيقة','دمج CMS كامل','دعم متعدد اللغات','مدونة محسّنة لمحركات البحث','لوحة تحليلات','واتساب ودردشة مباشرة','4 جولات تعديل','دعم 60 يوماً'],
+    es:['UI/UX personalizado (hasta 12 páginas)','Animaciones avanzadas','CMS completo','Multi-idioma','Blog con SEO','Dashboard analytics','WhatsApp y chat en vivo','4 revisiones','Soporte 60 días']}},
+    {tier:{en:'Premium',fr:'Premium',ar:'بريميوم',es:'Premium'},
+    name:{en:'Dominate',fr:'Dominer',ar:'هيمنة',es:'Dominar'},
+    desc:{en:'The complete digital powerhouse for established brands demanding excellence.',fr:"La solution digitale complète.",ar:'الحل الرقمي الشامل للعلامات التجارية الراسخة.',es:'La solución digital completa.'},
+    price:1499,
+    delivery:{en:'21–30 days',fr:'21–30 jours',ar:'21–30 يوم',es:'21–30 días'},
+    badge:{en:'Full Power',fr:'Pleine Puissance',ar:'القوة الكاملة',es:'Máximo Poder'},featured:false,installment:true,
+    cta:{en:'Launch My Business',fr:'Lancer Mon Business',ar:'أطلق عملي',es:'Lanzar Mi Negocio'},
+    features:{en:['Fully custom design system & brand identity','Unlimited pages with custom architecture','Advanced CMS + team dashboard','Custom animations (GSAP-level)','Full SEO strategy & structured data','Multi-language with RTL Arabic','Performance score 95+ guaranteed','Security hardening & backups','Unlimited revisions','90-day dedicated support'],
+    fr:['Système de design & identité sur mesure','Pages illimitées','CMS avancé + dashboard équipe','Animations GSAP','Stratégie SEO complète','Multi-langue RTL','Score 95+ garanti','Sécurisation & sauvegardes','Révisions illimitées','Support dédié 90 jours'],
+    ar:['نظام تصميم مخصص وهوية العلامة','صفحات غير محدودة','CMS متقدم + لوحة الفريق','رسوم متحركة GSAP','استراتيجية SEO كاملة','دعم متعدد اللغات RTL','ضمان أداء 95+','أمان ونسخ احتياطية','تعديلات غير محدودة','دعم 90 يوماً'],
+    es:['Sistema de diseño y marca personalizada','Páginas ilimitadas','CMS avanzado + panel equipo','Animaciones GSAP','Estrategia SEO completa','Multi-idioma RTL','Rendimiento 95+ garantizado','Seguridad y backups','Revisiones ilimitadas','Soporte dedicado 90 días']}}
+  ],
+  ecommerce:[
+    {tier:{en:'Starter',fr:'Débutant',ar:'مبتدئ',es:'Inicial'},
+    name:{en:'Shop',fr:'Boutique',ar:'متجر',es:'Tienda'},
+    desc:{en:'Launch your online store fast with everything you need to start selling.',fr:"Lancez votre boutique rapidement.",ar:'أطلق متجرك الإلكتروني بسرعة.',es:'Lanza tu tienda rápido.'},
+    price:599,
+    delivery:{en:'14–18 days',fr:'14–18 jours',ar:'14–18 يوم',es:'14–18 días'},
+    badge:null,featured:false,
+    cta:{en:'Start Selling',fr:'Commencer à Vendre',ar:'ابدأ البيع',es:'Empezar a Vender'},
+    features:{en:['Up to 50 products with full setup','Secure payment gateway integration','Mobile-optimized shopping','Inventory & order management','Product SEO optimization','Customer reviews system','Abandoned cart recovery','30-day support'],
+    fr:["Jusqu'à 50 produits",'Passerelle paiement sécurisée','Shopping mobile','Gestion inventaire','SEO produits','Avis clients','Récupération panier','Support 30 jours'],
+    ar:['حتى 50 منتج','بوابة دفع آمنة','تسوق محسّن للهاتف','إدارة المخزون','SEO للمنتجات','تقييمات العملاء','استرداد السلة المتروكة','دعم 30 يوماً'],
+    es:['Hasta 50 productos','Pasarela de pago segura','Compras optimizadas móvil','Gestión inventario','SEO productos','Reseñas clientes','Recuperación carrito','Soporte 30 días']}},
+    {tier:{en:'Professional',fr:'Professionnel',ar:'احترافي',es:'Profesional'},
+    name:{en:'Market',fr:'Marché',ar:'سوق',es:'Mercado'},
+    desc:{en:'A conversion-optimized store built to scale your revenue intelligently.',fr:'Une boutique optimisée pour la conversion.',ar:'متجر محسّن للتحويل مُصمم لتنمية إيراداتك.',es:'Una tienda optimizada para la conversión.'},
+    price:1199,
+    delivery:{en:'18–28 days',fr:'18–28 jours',ar:'18–28 يوم',es:'18–28 días'},
+    badge:{en:'Best ROI',fr:'Meilleur ROI',ar:'أفضل عائد',es:'Mejor ROI'},featured:true,installment:true,
+    cta:{en:'Build My Store',fr:'Construire Ma Boutique',ar:'ابنِ متجري',es:'Construir Mi Tienda'},
+    features:{en:['Unlimited products + advanced filtering','Multi-currency & multi-language','Analytics & sales dashboard','Upsell, cross-sell & bundles','Email marketing integration','Flash sales & discounts','Loyalty points system','Advanced SEO + Google Shopping','Live chat support portal','60-day support'],
+    fr:['Produits illimités','Multi-devises & multi-langue','Analytics & ventes','Upsell, cross-sell','Email marketing','Ventes flash','Points fidélité','SEO + Google Shopping','Live chat','Support 60 jours'],
+    ar:['منتجات غير محدودة','متعدد العملات واللغات','تحليلات ومبيعات','بيع إضافي وعرض مشترك','تسويق بريدي','مبيعات فلاش','نقاط الولاء','SEO + Google Shopping','دردشة مباشرة','دعم 60 يوماً'],
+    es:['Productos ilimitados','Multi-moneda e idioma','Analytics y ventas','Upsell y cross-sell','Email marketing','Ventas flash','Puntos de fidelidad','SEO + Google Shopping','Chat en vivo','Soporte 60 días']}},
+    {tier:{en:'Premium',fr:'Premium',ar:'بريميوم',es:'Premium'},
+    name:{en:'Empire',fr:'Empire',ar:'إمبراطورية',es:'Imperio'},
+    desc:{en:'Enterprise-level e-commerce for serious revenue and brand dominance.',fr:'E-commerce niveau entreprise.',ar:'تجارة إلكترونية بمستوى المؤسسات.',es:'E-commerce de nivel empresarial.'},
+    price:2499,
+    delivery:{en:'28–40 days',fr:'28–40 jours',ar:'28–40 يوم',es:'28–40 días'},
+    badge:{en:'Enterprise',fr:'Entreprise',ar:'مؤسسي',es:'Empresa'},featured:false,installment:true,
+    cta:{en:'Build My Empire',fr:'Construire Mon Empire',ar:'ابنِ إمبراطوريتي',es:'Construir Mi Imperio'},
+    features:{en:['Custom storefront with unique UX','B2B & B2C hybrid commerce','AI product recommendations','Advanced inventory & suppliers','Full ERP/CRM integration','Multi-store dashboard','Custom loyalty engine','Full SEO + performance guarantee','Security & fraud detection','Unlimited revisions + SLA'],
+    fr:['Vitrine sur mesure','B2B & B2C hybride','Recommandations IA','Inventaire & fournisseurs','ERP/CRM complet','Multi-boutiques','Fidélité sur mesure','SEO + garantie perf','Sécurité & fraude','Illimité + SLA'],
+    ar:['واجهة مخصصة','تجارة B2B وB2C','توصيات الذكاء الاصطناعي','مخزون وموردون','ERP/CRM كامل','لوحة متعددة المتاجر','محرك ولاء مخصص','SEO + ضمان أداء','أمان وكشف احتيال','غير محدود + SLA'],
+    es:['Tienda a medida','Comercio B2B y B2C','Recomendaciones IA','Inventario y proveedores','ERP/CRM completo','Multi-tienda','Motor de fidelidad','SEO + garantía','Seguridad y fraude','Ilimitado + SLA']}}
+  ],
+  apps:[
+    {tier:{en:'Starter',fr:'Débutant',ar:'مبتدئ',es:'Inicial'},
+    name:{en:'Launch App',fr:'App Lancement',ar:'تطبيق الإطلاق',es:'App de Lanzamiento'},
+    desc:{en:'Your MVP mobile app — validate your idea and get to market quickly.',fr:'Votre app MVP — validez votre idée rapidement.',ar:'تطبيقك المحمول للـ MVP — تحقق من فكرتك.',es:'Tu app MVP — valida tu idea rápidamente.'},
+    price:1299,
+    delivery:{en:'21–30 days',fr:'21–30 jours',ar:'21–30 يوم',es:'21–30 días'},
+    badge:null,featured:false,installment:true,
+    cta:{en:'Build My App',fr:'Créer Mon App',ar:'ابنِ تطبيقي',es:'Crear Mi App'},
+    features:{en:['iOS & Android (React Native)','Up to 8 screens clean UI/UX','User authentication system','Basic backend & database','Push notifications','App Store & Play Store submission','2 revisions + 30-day support'],
+    fr:['iOS & Android (React Native)',"Jusqu'à 8 écrans",'Authentification','Backend & BDD','Notifications push','Soumission stores','2 révisions + 30 jours'],
+    ar:['iOS وAndroid (React Native)','حتى 8 شاشات','مصادقة المستخدم','خلفية وقاعدة بيانات','إشعارات فورية','رفع على المتاجر','جولتان + دعم 30 يوماً'],
+    es:['iOS y Android (React Native)','Hasta 8 pantallas','Autenticación','Backend y BD','Notificaciones push','Envío a stores','2 revisiones + 30 días']}},
+    {tier:{en:'Professional',fr:'Professionnel',ar:'احترافي',es:'Profesional'},
+    name:{en:'Scale App',fr:'App Évolutive',ar:'تطبيق النمو',es:'App Escalable'},
+    desc:{en:'A fully-featured app for real users, real retention, and real growth.',fr:'Une app complète pour une vraie croissance.',ar:'تطبيق متكامل لمستخدمين حقيقيين.',es:'Una app completa para crecimiento real.'},
+    price:2999,
+    delivery:{en:'30–50 days',fr:'30–50 jours',ar:'30–50 يوم',es:'30–50 días'},
+    badge:{en:'Best Choice',fr:'Meilleur Choix',ar:'الخيار الأفضل',es:'Mejor Elección'},featured:true,installment:true,
+    cta:{en:'Launch My App',fr:'Lancer Mon App',ar:'أطلق تطبيقي',es:'Lanzar Mi App'},
+    features:{en:['iOS & Android + advanced UI/UX','Unlimited screens + animations','Advanced backend (Node.js/Firebase)','Real-time features & updates','In-app purchases & subscriptions','Analytics & behavior tracking','Multi-language + RTL','Push notification system','Admin dashboard & CMS','4 revisions + 60-day support'],
+    fr:['iOS & Android avancé','Écrans illimités + animations','Backend avancé','Temps réel','Achats intégrés','Analytics','Multi-langue RTL','Notifications avancées','Dashboard admin','4 révisions + 60 jours'],
+    ar:['iOS وAndroid متقدم','شاشات غير محدودة + رسوم','خلفية متقدمة','وقت فعلي','مشتريات واشتراكات','تحليلات','متعدد اللغات RTL','إشعارات متقدمة','لوحة إدارة','4 تعديلات + 60 يوماً'],
+    es:['iOS y Android avanzado','Pantallas ilimitadas','Backend avanzado','Tiempo real','Compras in-app','Analytics','Multi-idioma RTL','Notificaciones avanzadas','Panel admin','4 revisiones + 60 días']}},
+    {tier:{en:'Premium',fr:'Premium',ar:'بريميوم',es:'Premium'},
+    name:{en:'Dominate App',fr:'App Dominante',ar:'تطبيق الهيمنة',es:'App Dominante'},
+    desc:{en:'A complete product-grade app with cutting-edge features and enterprise reliability.',fr:"Une app produit avec des fonctionnalités de pointe.",ar:'تطبيق بجودة المنتج الكامل مع ميزات متطورة.',es:'Una app de nivel producto con características de vanguardia.'},
+    price:5999,
+    delivery:{en:'50–80 days',fr:'50–80 jours',ar:'50–80 يوم',es:'50–80 días'},
+    badge:{en:'Full Product',fr:'Produit Complet',ar:'منتج كامل',es:'Producto Completo'},featured:false,installment:true,
+    cta:{en:'Create My Product',fr:'Créer Mon Produit',ar:'أنشئ منتجي',es:'Crear Mi Producto'},
+    features:{en:['Cross-platform app + web dashboard','Custom design system & brand','Scalable cloud (AWS/GCP)','AI/ML integration','Advanced security & encryption','Payment gateway + subscriptions','Full analytics + A/B testing','Unlimited API integrations','Dedicated QA & testing','Unlimited revisions + 90-day SLA'],
+    fr:['App cross-platform + dashboard','Design & marque sur mesure','Cloud AWS/GCP','IA/ML','Sécurité & chiffrement','Paiements + abonnements','Analytics + A/B','API illimitées','QA dédié','Illimité + SLA 90j'],
+    ar:['تطبيق متعدد المنصات + ويب','نظام تصميم وعلامة تجارية','سحابة AWS/GCP','ذكاء اصطناعي','أمان وتشفير','دفع واشتراكات','تحليلات + A/B','API غير محدود','QA مخصص','غير محدود + SLA 90 يوماً'],
+    es:['App multiplataforma + web','Diseño y marca personalizada','Cloud AWS/GCP','IA/ML','Seguridad y encriptación','Pagos + suscripciones','Analytics + A/B','APIs ilimitadas','QA dedicado','Ilimitado + SLA 90 días']}}
+  ]
+};
+
+/* ══ STATE ══ */
+let currentLang='en', currentCat='websites';
+let currentCurrency={code:'EUR',symbol:'€',rate:1,flag:'🇪🇺',name:'Euro',decimals:2};
+
+/* ══ CURRENCY ══ */
+function selectCurrency(el){
+  const code=el.dataset.currency,flag=el.dataset.flag;
+  const rate=parseFloat(el.dataset.rate),symbol=el.dataset.symbol;
+  const decimals=parseInt(el.dataset.decimals||2);
+  const name=el.dataset['name'+currentLang.charAt(0).toUpperCase()+currentLang.slice(1)]||el.dataset.nameEn||code;
+  currentCurrency={code,symbol,rate,flag,name,decimals};
+  // update pills
+  document.querySelectorAll('.curr-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  // update banner
+  const banner=document.getElementById('currencyBanner');
+  document.getElementById('bannerFlag').textContent=flag;
+  document.getElementById('bannerCurrency').textContent=code+' — '+name;
+  document.getElementById('bannerNote').textContent=code!=='EUR'?'· Approx. from EUR':'';
+  banner.classList.add('visible');
+  // animate prices
+  updateAllPrices();
+}
+
+function fmt(eurPrice){
+  const v=eurPrice*currentCurrency.rate;
+  const d=currentCurrency.decimals;
+  if(d===0) return Math.round(v).toLocaleString();
+  return v.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+
+function updateAllPrices(){
+  document.querySelectorAll('.price-num[data-eur]').forEach(el=>{
+    const eur=parseFloat(el.dataset.eur);
+    el.classList.add('animating');
+    setTimeout(()=>{el.textContent=fmt(eur);el.classList.remove('animating')},200);
+  });
+  document.querySelectorAll('.price-currency').forEach(el=>{
+    el.style.opacity='0';
+    setTimeout(()=>{el.textContent=currentCurrency.symbol;el.style.opacity='1'},200);
+  });
+  document.querySelectorAll('.installment-val[data-eur]').forEach(el=>{
+    el.textContent=fmt(parseFloat(el.dataset.eur))+' '+currentCurrency.code;
+  });
+  document.querySelectorAll('.first-pay-highlight[data-eur]').forEach(el=>{
+    el.textContent=fmt(parseFloat(el.dataset.eur))+' '+currentCurrency.code;
+  });
+  // refresh currency name labels in pills (for lang change)
+  refreshCurrPillNames();
+}
+
+function refreshCurrPillNames(){
+  document.querySelectorAll('.curr-pill').forEach(pill=>{
+    const code=pill.dataset.currency;
+    const span=pill.querySelector('[data-i18n-curr]');
+    if(span) span.textContent=i18n[currentLang][code]||'';
+  });
+}
+
+/* ══ COUNTER ══ */
+function animateCounter(el,target){
+  const dur=2000,start=performance.now();
+  const suffix=target===98?'+':'+';
+  function tick(now){
+    const p=Math.min((now-start)/dur,1);
+    const e=1-Math.pow(1-p,4);
+    el.textContent=Math.round(e*target)+suffix;
+    if(p<1)requestAnimationFrame(tick);
+    else el.textContent=target+suffix;
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ══ TRANSLATE ══ */
+function applyTranslations(lang){
+  const t=i18n[lang]||i18n.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;
+    if(t[k]!==undefined)el.textContent=t[k];
+  });
+  refreshCurrPillNames();
+}
+function tl(obj){return typeof obj==='string'?obj:(obj[currentLang]||obj.en||'')}
+
+/* ══ INSTALLMENT TOGGLE ══ */
+function toggleInstall(id){document.getElementById(id)?.classList.toggle('open')}
+
+/* ══ RENDER CARDS ══ */
+function renderCards(cat){
+  const grid=document.getElementById('cardsGrid');
+  grid.classList.add('transitioning');
+  setTimeout(()=>{
+    const uiT=i18n[currentLang]||i18n.en;
+    grid.innerHTML='';
+    packages[cat].forEach((pkg,i)=>{
+      const card=document.createElement('div');
+      card.className='card'+(pkg.featured?' featured':'');
+      const bText=pkg.badge?tl(pkg.badge):null;
+      const badgeHtml=bText?(pkg.featured?`<div class="card-badge">⭐ ${bText}</div>`:`<div class="card-badge-dim">${bText}</div>`):`<div style="height:26px"></div>`;
+      const feats=(pkg.features[currentLang]||pkg.features.en);
+      const featsHtml=feats.map(f=>`<li><div class="check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#00e87a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>${f}</li>`).join('');
+      let instHtml='';
+      if(pkg.installment){
+        const raw=pkg.price,first=Math.round(raw*.5),monthly=Math.round((raw-first)/5);
+        instHtml=`<div class="installment-block" id="inst-${cat}-${i}">
+          <div class="installment-header" onclick="toggleInstall('inst-${cat}-${i}')">
+            <div class="installment-header-left">
+              <div class="installment-icon">💳</div>
+              <div><div class="installment-title">${uiT.inst_title}</div><div class="installment-subtitle">${uiT.inst_sub}</div></div>
+            </div>
+            <div class="installment-arrow">▼</div>
+          </div>
+          <div class="installment-body"><div class="installment-inner">
+            <div class="installment-row">
+              <span class="installment-label"><span class="dot"></span>${uiT.inst_first}</span>
+              <span class="first-pay-highlight" data-eur="${first}">${fmt(first)} ${currentCurrency.code}</span>
+            </div>
+            <div class="installment-row">
+              <span class="installment-label"><span class="dot"></span>${uiT.inst_monthly}</span>
+              <span class="installment-val" data-eur="${monthly}">${fmt(monthly)} ${currentCurrency.code}</span>
+            </div>
+            <div class="installment-row">
+              <span class="installment-label"><span class="dot"></span>${uiT.inst_start}</span>
+              <span class="installment-val">📅</span>
+            </div>
+            <div class="installment-warning"><span class="installment-warning-icon">🚫</span><span>${uiT.inst_warn}</span></div>
+          </div></div>
+        </div>`;
+      }
+      card.innerHTML=`
+        <div class="card-corner"></div>
+        ${badgeHtml}
+        <div class="card-tier">${tl(pkg.tier)}</div>
+        <div class="card-name">${tl(pkg.name)}</div>
+        <p class="card-desc">${tl(pkg.desc)}</p>
+        <div class="price-wrap">
+          <span class="price-currency">${currentCurrency.symbol}</span>
+          <span class="price-num" data-eur="${pkg.price}">${fmt(pkg.price)}</span>
+          <span class="price-note">${uiT.from||'from'}</span>
+        </div>
+        <div class="delivery-badge"><span>⚡</span> ${tl(pkg.delivery)}</div>
+        <div class="divider"></div>
+        <ul class="features-list">${featsHtml}</ul>
+        ${instHtml}
+        <button class="cta-btn ${pkg.featured?'cta-btn-primary':'cta-btn-outline'}" data-cat="${cat}" data-pkg="${tl(pkg.tier)} ${tl(pkg.name)}">${tl(pkg.cta)} →</button>`;
+      grid.appendChild(card);
+    });
+    grid.classList.remove('transitioning');
+    setTimeout(()=>grid.querySelectorAll('.card').forEach((c,i)=>setTimeout(()=>c.classList.add('visible'),i*90)),40);
+    grid.querySelectorAll('.cta-btn').forEach(b=>b.addEventListener('click',handleCTA));
+  },300);
+}
+
+/* ══ CTA ══ */
+const catNames={websites:{en:'Website',fr:'Site Web',ar:'موقع',es:'Sitio Web'},ecommerce:{en:'E-commerce Store',fr:'Boutique',ar:'متجر',es:'Tienda'},apps:{en:'Mobile App',fr:'App',ar:'تطبيق',es:'App'}};
+function handleCTA(e){
+  const btn=e.currentTarget,cat=btn.dataset.cat,pkg=btn.dataset.pkg;
+  const cn=catNames[cat][currentLang]||catNames[cat].en;
+  const msgs={en:`Hello digitalFler, I'm interested in the ${pkg} ${cn} package.`,fr:`Bonjour digitalFler, je suis intéressé par le forfait ${pkg} ${cn}.`,ar:`مرحبا digitalFler، أنا مهتم بباقة ${pkg} ${cn}.`,es:`Hola digitalFler, estoy interesado en el paquete ${pkg} ${cn}.`};
+  showToast();
+  setTimeout(()=>window.open(`https://wa.me/212650474197?text=${encodeURIComponent(msgs[currentLang]||msgs.en)}`,'_blank'),1400);
+}
+function showToast(){
+  const t=document.getElementById('toast'),f=document.getElementById('toastBarFill');
+  t.classList.add('show');
+  if(f){f.style.animation='none';void f.offsetWidth;f.style.animation='toastTimer 4s linear forwards'}
+  setTimeout(()=>t.classList.remove('show'),4200);
+}
+
+/* ══ CATEGORY FILTER ══ */
+document.querySelectorAll('.cat-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat=btn.dataset.cat;
+    renderCards(currentCat);
+  });
+});
+
+/* ══ LANGUAGE SWITCHER ══ */
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    currentLang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.documentElement.dir=currentLang==='ar'?'rtl':'ltr';
+    document.documentElement.lang=currentLang;
+    // refresh currency name from new lang
+    const activePill=document.querySelector('.curr-pill.active');
+    if(activePill){
+      const key='name'+currentLang.charAt(0).toUpperCase()+currentLang.slice(1);
+      currentCurrency.name=activePill.dataset[key]||activePill.dataset.nameEn||currentCurrency.code;
+    }
+    applyTranslations(currentLang);
+    renderCards(currentCat);
+  });
+});
+
+/* ══ OBSERVERS ══ */
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.15});
+[document.getElementById('filterCurrencyBlock'),document.getElementById('statsBar')].forEach(el=>el&&obs.observe(el));
+
+new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)document.getElementById('currencyBanner')?.classList.add('visible')}),{threshold:.1}).observe(document.querySelector('.pricing-section'));
+
+// Stats counter
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-count]').forEach(el=>animateCounter(el,parseInt(el.dataset.count)));
+      e.target.classList.add('visible');
+    }
+  });
+},{threshold:.3}).observe(document.getElementById('statsBar'));
+
+// Loyalty cards
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.loyalty-card').forEach((c,i)=>{
+        setTimeout(()=>{
+          c.classList.add('visible');
+          c.querySelector('.progress-fill')?.style.setProperty('width',c.querySelector('.progress-fill').dataset.progress+'%');
+        },i*120);
+      });
+    }
+  });
+},{threshold:.1}).observe(document.getElementById('loyaltyGrid'));
+
+/* ══ INIT ══ */
+applyTranslations('en');
+renderCards('websites');
+// Show banner on load with default EUR
+setTimeout(()=>document.getElementById('currencyBanner')?.classList.add('visible'),800);
+</script>
+</body>
+</html>
